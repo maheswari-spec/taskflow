@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+
   "scripts": {
-    "dev": "ts-node-dev --respawn src/server.ts"
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "build": "tsc && npx prisma generate",
+    "start": "node dist/server.js"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
@@ -23,8 +28,10 @@
     "mysql2": "^3.22.3",
     "openai": "^6.39.0",
     "prisma": "^6.9.0",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "typescript": "^6.0.3"
   },
+
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
@@ -32,7 +39,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^6.0.3"
+    "ts-node-dev": "^2.0.0"
   }
 }
