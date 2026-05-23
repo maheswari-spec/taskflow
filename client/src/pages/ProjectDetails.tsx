@@ -96,7 +96,7 @@ const [showOverdueOnly, setShowOverdueOnly] = useState(false)
 
   const handleCreateTask = async () => {
     await axios.post(
-     `$ {import.meta.env.VITE_API_URL}/api/task/create`,
+     `${import.meta.env.VITE_API_URL}/api/task/create`,
       {
         ...formData,
         projectId: Number(id),
