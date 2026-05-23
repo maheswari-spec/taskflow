@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  name             String
+  email            String            @unique
+  password         String
+  createdAt        DateTime          @default(now())
+  workspaces       Workspace[]
+  workspaceMembers WorkspaceMember[]
+
+  assignedTasks Task[]
+  comments Comment[]
+  notifications Notification[]
+  activities Activity[]
+}
+
+model Workspace {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  userId   Int
+  user     User              @relation(fields: [userId], references: [id])
+  projects Project[]
+  members  WorkspaceMember[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  tasks       Task[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("TODO")
+  priority    String   @default("MEDIUM")
+  createdAt   DateTime @default(now())
+
+  projectId    Int
+  project      Project @relation(fields: [projectId], references: [id])
+  assignedToId Int?
+  assignedTo   User?   @relation(fields: [assignedToId], references: [id])
+  comments Comment[]
+  ticketKey String? @unique
+type      String  @default("TASK")
+dueDate   DateTime?
+activities Activity[]
+attachments Attachment[]
+}
+
+model WorkspaceMember {
+  id Int @id @default(autoincrement())
+
+  userId      Int
+  workspaceId Int
+
+  user      User      @relation(fields: [userId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  createdAt DateTime @default(now())
+  role String @default("MEMBER")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+
+  text      String
+
+  createdAt DateTime @default(now())
+
+  taskId     Int
+  userId     Int
+
+  task        Task @relation(fields: [taskId], references: [id])
+  user        User @relation(fields: [userId], references: [id])
+}
+model Notification {
+  id        Int      @id @default(autoincrement())
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  action    String
+  createdAt DateTime @default(now())
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  fileUrl   String
+  fileType  String?
+  createdAt DateTime @default(now())
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id])
+}
